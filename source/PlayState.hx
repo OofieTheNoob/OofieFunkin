@@ -988,6 +988,8 @@ class PlayState extends MusicBeatState
 		doof.nextDialogueThing = startNextDialogue;
 		doof.skipDialogueThing = skipDialogue;
 
+		var oldScoreTxt:Bool = (ClientPrefs.oldScoreTxt);
+
 		Conductor.songPosition = -5000;
 
 		strumLine = new FlxSprite(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, 50).makeGraphic(FlxG.width, 10);
@@ -1173,6 +1175,12 @@ class PlayState extends MusicBeatState
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
+		if(ClientPrefs.oldScoreTxt) {
+			scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
+			scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			scoreTxt.scrollFactor.set();
+			add(scoreTxt);
+		}
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1386,6 +1394,11 @@ class PlayState extends MusicBeatState
 	}
 
 	public function reloadHealthBarColors() {
+		if(ClientPrefs.oldScoreTxt) // love week 7
+		{
+		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		}
+		if(!ClientPrefs.oldScoreTxt)
 		healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
 			FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]));
 
@@ -2161,12 +2174,17 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
+		if(!ClientPrefs.oldScoreTxt)
 		scoreTxt.text = 'Score: ' + songScore
 		+ ' | Misses: ' + songMisses
 		+ ' | Rating: ' + ratingName
 		+ (ratingName != '?' ? ' (${Highscore.floorDecimal(ratingPercent * 100, 2)}%) - $ratingFC' : '');
+		if(ClientPrefs.oldScoreTxt)
+		{
+		scoreTxt.text = "Score:" + songScore;
+		}
 
-		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
+		if(ClientPrefs.scoreZoom && !miss && !cpuControlled && !ClientPrefs.oldScoreTxt)
 		{
 			if(scoreTxtTween != null) {
 				scoreTxtTween.cancel();
@@ -4555,33 +4573,43 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function spawnNoteSplashOnNote(note:Note) {
-		if(ClientPrefs.noteSplashes && note != null) {
-			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) {
-				spawnNoteSplash(strum.x, strum.y, note.noteData, note);
+	function spawnNoteSplashOnNote(note:Note)
+		{
+			if (ClientPrefs.noteSplashes && note != null)
+			{
+				var strum:StrumNote = playerStrums.members[note.noteData];
+				if (strum != null)
+				{
+					spawnNoteSplash(strum.x, strum.y, note.noteData, note);
+				}
 			}
 		}
-	}
 
-	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
-		var skin:String = 'noteSplashes';
-		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
-
-		var hue:Float = ClientPrefs.arrowHSV[data % 4][0] / 360;
-		var sat:Float = ClientPrefs.arrowHSV[data % 4][1] / 100;
-		var brt:Float = ClientPrefs.arrowHSV[data % 4][2] / 100;
-		if(note != null) {
-			skin = note.noteSplashTexture;
-			hue = note.noteSplashHue;
-			sat = note.noteSplashSat;
-			brt = note.noteSplashBrt;
+	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null)
+		{
+			var skin:String = 'noteSplashesOld';
+			if (isPixelStage)
+				skin = 'noteSplashes';
+			if (PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0)
+				skin = PlayState.SONG.splashSkin;
+	
+			var hue:Float = ClientPrefs.arrowHSV[data % 4][0] / 360;
+			var sat:Float = ClientPrefs.arrowHSV[data % 4][1] / 100;
+			var brt:Float = ClientPrefs.arrowHSV[data % 4][2] / 100;
+			var tra:Float = 1;
+			if (note != null)
+			{
+				skin = note.noteSplashTexture;
+				hue = note.noteSplashHue;
+				sat = note.noteSplashSat;
+				brt = note.noteSplashBrt;
+				tra = note.alpha;
+			}
+	
+			var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+			splash.setupNoteSplash(x, y, tra, data, skin, hue, sat, brt);
+			grpNoteSplashes.add(splash);
 		}
-
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
-		grpNoteSplashes.add(splash);
-	}
 
 	var fastCarCanDrive:Bool = true;
 

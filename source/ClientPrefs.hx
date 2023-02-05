@@ -11,6 +11,7 @@ class ClientPrefs {
 	public static var middleScroll:Bool = false;
 	public static var opponentStrums:Bool = true;
 	public static var showNoteCombo:Bool = true;
+	public static var oldScoreTxt:Bool = false;
 	public static var showFPS:Bool = true;
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
@@ -97,6 +98,7 @@ class ClientPrefs {
 		FlxG.save.data.downScroll = downScroll;
 		FlxG.save.data.middleScroll = middleScroll;
 		FlxG.save.data.opponentStrums = opponentStrums;
+		FlxG.save.data.oldScoreTxt = oldScoreTxt;
 		FlxG.save.data.showNoteCombo = showNoteCombo;
 		FlxG.save.data.showFPS = showFPS;
 		FlxG.save.data.flashing = flashing;
@@ -167,6 +169,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.showNoteCombo != null) {
 			showNoteCombo = FlxG.save.data.showNoteCombo;
+		}
+		if(FlxG.save.data.oldScoreTxt != null) {
+			oldScoreTxt = FlxG.save.data.oldScoreTxt;
 		}
 		if(FlxG.save.data.lowQuality != null) {
 			lowQuality = FlxG.save.data.lowQuality;

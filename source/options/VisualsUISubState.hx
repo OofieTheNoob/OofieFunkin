@@ -77,6 +77,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Old Score Text',
+			"If checked, the text is replaced by FNF's Original Score.",
+			'oldScoreTxt',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Score Text Zoom on Hit',
 			"If unchecked, disables the Score text zooming\neverytime you hit a note.",
 			'scoreZoom',
