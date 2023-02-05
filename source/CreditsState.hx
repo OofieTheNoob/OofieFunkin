@@ -87,6 +87,7 @@ class CreditsState extends MusicBeatState
 			['Extra Credits'],
 			['Ice Engine',			'iceengine',		'Some Code',													'https://github.com/xenkap/IceEngine',	'FFFFFF'],
 			['Stilic',				'none',				'Made the Note Combo Script',									'https://github.com/Stilic',			'FFFFFF'],
+			['FireKoopa',			'none',				'Made the Song Name + Time Left + Time Elapsed',				'https://twitter.com/FireKoopaX',		'FFFFFF'],
 			[''],
 			['Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],

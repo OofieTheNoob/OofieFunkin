@@ -1041,6 +1041,14 @@ class PlayState extends MusicBeatState
 			timeTxt.y += 3;
 		}
 
+		// since psych engine just fucking doesn't work and says "string should be bool"
+		if(ClientPrefs.timeBarType == 'SN + TL + TE')
+		{
+			timeTxt.size = 24;
+			timeTxt.y += 3;
+		}
+	
+
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.0;
@@ -2988,8 +2996,11 @@ class PlayState extends MusicBeatState
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if(secondsTotal < 0) secondsTotal = 0;
 
-					if(ClientPrefs.timeBarType != 'Song Name')
+					if(ClientPrefs.timeBarType != 'Song Name' )
 						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+
+					if(ClientPrefs.timeBarType == 'SN + TL + TE')
+						timeTxt.text = (SONG.song + ' (' + (FlxStringUtil.formatTime(Math.max(0, Math.floor(curTime / 1000)), false) + ' / ' + FlxStringUtil.formatTime(Math.max(0, Math.floor((FlxG.sound.music.length) / 1000)), false)) + ')');
 				}
 			}
 
